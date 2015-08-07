@@ -81,7 +81,14 @@ function! gitgutter#sign#find_current_signs()
     " Typical sign line:  line=88 id=1234 name=GitGutterLineAdded
     " We assume splitting is faster than a regexp.
     let components  = split(sign_line)
-    let name        = split(components[2], '=')[1]
+
+    try
+      let name        = split(components[2], '=')[1]
+    catch /E684:/
+      echom "find_current_signs failed on line: " . sign_line
+      echom "signs=\n" . signs
+    endtry
+
     if name =~# 'GitGutterDummy'
       let dummy_sign_placed = 1
     else
